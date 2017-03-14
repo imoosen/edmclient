@@ -1,0 +1,6 @@
+com\fiveone\edm\service\EmailStateTest.class
+com\fiveone\edm\service\EmailProjectTest.class
+com\fiveone\edm\service\EmailTest.class
+com\fiveone\edm\service\EmailSenderTest.class
+com\fiveone\edm\service\EmailLogsTest.class
+com\fiveone\edm\service\EmailContentTest.class

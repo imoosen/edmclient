@@ -1,5 +1,7 @@
 package com.fiveone.edm.email;
 
+import com.fiveone.edm.util.ParseMailUtil;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -43,9 +45,9 @@ import javax.mail.internet.MimeUtility;
  */
 public class ReceiveEmail {
 	
-	private static MimeMessage mimeMessage = null;  
+	private static MimeMessage mimeMessage = null;
 
-	//邮件接收协议 
+	//邮件接收协议
     private static final String MAIL_RECEIVE_PROTOCOL = "imap"; 
 
 	//POP3邮件服务器，接收邮件的POP3服务器的IP(或主机地址)
@@ -127,10 +129,24 @@ public class ReceiveEmail {
 //        Message[] messages = folder.getMessages();
         
         //获取未读邮件  
-        Message[] messages = folder.getMessages(folder.getMessageCount()-folder.getUnreadMessageCount()+1,folder.getMessageCount());  
+        Message[] messages = folder.getMessages(folder.getMessageCount()-folder.getUnreadMessageCount()+1,folder.getMessageCount());
+
+        for (int i = 0; i < messages.length; i++) {
+            ParseMailUtil re = new ParseMailUtil((MimeMessage) messages[i]);
+            System.out.println("邮件　" + i + "　主题:　" + re.getSubject());
+            System.out.println("邮件　" + i + "　发送时间:　" + re.getSentDate());
+            System.out.println("邮件　" + i + "　发送人地址:　" + re.getFrom());
+            System.out.println("邮件　" + i + "　收信人地址:　" + re.getMailAddress("to"));
+            re.setDateFormat("yyyy-MM-dd HH:mm:ss");
+            System.out.println("邮件　" + i + "　发送时间:　" + re.getSentDate());
+            re.getMailContent((Part) messages[i]);
+            System.out.println("邮件　" + i + "　正文内容:　\r\n" + re.getBodyText());
+        }
+
         folder.fetch(messages, profile);
-        List<Map<String,String>> list = parseMessages(messages);  
-       
+        List<Map<String,String>> list = parseMessages(messages);
+
+
         //释放资源  
         if (folder != null) 
         folder.close(true);  
